@@ -1,0 +1,1 @@
+docker run -p 8080:80 streamserver rtsp://sua_url_da_transmissao
