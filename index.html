@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Cam</title>
+
+    <!-- CSS  -->
+    <link href="https://vjs.zencdn.net/7.2.3/video-js.css" rel="stylesheet" />
+  </head>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> -->
+  <body>
+    <!-- Use this if you only support Safari!!
+    <div id="player">
+        <video id="video" autoplay="true" controls="controls">
+            <source src="http://192.1xx.x.1xx:8080/playlist.mp4" />
+            Your browser does not support HTML5 streaming!
+        </video>
+    </div>
+-->
+    <video id="videooriginal" autoplay="true" controls="controls">
+      <source src="http://localhost:8090/videoplayback.mp4" />
+    </video>
+
+    <video
+      id="video"
+      class="video-js vjs-default-skin"
+      autoplay="true"
+      controls="controls"
+    >
+      <source
+        src="http://localhost:8090/filename.m3u8"
+        type="application/x-mpegURL"
+      />
+    </video>
+
+    <!-- JS code -->
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.14.1/videojs-contrib-hls.js"></script>
+    <script src="https://vjs.zencdn.net/7.2.3/video.js"></script>
+    <script>
+      var player = videojs("video");
+      player.play();
+    </script>
+    <!-- <script>
+      if (Hls.isSupported()) {
+        var video = document.getElementById("video");
+        var hls = new Hls();
+        // bind them together
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          console.log("video and hls.js are now bound together !");
+          hls.loadSource("http://localhost:8090/playlist.mp4");
+          hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {});
+        });
+      }
+    </script> -->
+  </body>
+</html>
