@@ -12,6 +12,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 8090
 EXPOSE 1935
+EXPOSE 554
+EXPOSE 22
 
 ENV RTSP_URL=rtsp://localhost:8554/live/stream
 
