@@ -35,3 +35,4 @@ jobs:
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: streamserver
             location: 'brazil south'
+            ports: 8090 1935 554
