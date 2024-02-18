@@ -1,0 +1,1 @@
+docker run -d -p 8090:8090 -p 1935:1935 -p 554:554 -p 22:22 --name streamserver streamserver
