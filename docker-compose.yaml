@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  snapshotserver:
+    build:
+      dockerfile: ./snapshotserver/snapshotserver.Dockerfile
+      args:
+        - INPUT_STREAM_FROM=${INPUT_STREAM}
+    volumes:
+      - snapshotlocation:/src
+
+  filesender:
+    build:
+      context: ./filesender
+      dockerfile: ./filesender.Dockerfile
+      args:
+        - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
+        - SNAPSHOT_FOLDER=${FOLDER}
+    volumes:
+      - snapshotlocation:/app/test
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASS
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASS
+    ports:
+      - "3306:3306"
+    command: ["sh", "./db/migration.sh"]
+    volumes:
+      - ./db/data:/var/lib/mysql
+
+volumes:
+  snapshotlocation:
