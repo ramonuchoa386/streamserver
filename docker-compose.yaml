@@ -1,23 +1,23 @@
 version: "3"
 
 services:
-  snapshotserver:
-    build:
-      dockerfile: ./snapshotserver/snapshotserver.Dockerfile
-      args:
-        - INPUT_STREAM_FROM=${INPUT_STREAM}
-    volumes:
-      - snapshotlocation:/src
+  # snapshotserver:
+  #   build:
+  #     dockerfile: ./snapshotserver/snapshotserver.Dockerfile
+  #     args:
+  #       - INPUT_STREAM_FROM=${INPUT_STREAM}
+  #   volumes:
+  #     - snapshotlocation:/src
 
-  filesender:
-    build:
-      context: ./filesender
-      dockerfile: ./filesender.Dockerfile
-      args:
-        - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
-        - SNAPSHOT_FOLDER=${FOLDER}
-    volumes:
-      - snapshotlocation:/app/test
+  # filesender:
+  #   build:
+  #     context: ./filesender
+  #     dockerfile: ./filesender.Dockerfile
+  #     args:
+  #       - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
+  #       - SNAPSHOT_FOLDER=${FOLDER}
+  #   volumes:
+  #     - snapshotlocation:/app/test
 
   mysql:
     image: mysql:latest
@@ -29,9 +29,46 @@ services:
       MYSQL_PASSWORD: $DB_PASS
     ports:
       - "3306:3306"
-    command: ["sh", "./db/migration.sh"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
     volumes:
       - ./db/data:/var/lib/mysql
+      - ./db:/db
+
+  condomanager:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: ./condomanager
+      dockerfile: ./bin/condomanager.Dockerfile
+    ports:
+      - "8080:8080"
+    links:
+      - mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://condomanager:8080/actuator/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # condoclient:
+  #   depends_on:
+  #     condomanager:
+  #       condition: service_healthy
+  #   build:
+  #     context: ./condoclient
+  #     dockerfile: ./bin/condoclient.Dockerfile
+  #   ports:
+  #     - "8094:80"
+  #   links:
+  #     - condomanager
 
 volumes:
   snapshotlocation:
