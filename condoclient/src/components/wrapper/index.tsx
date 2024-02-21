@@ -1,4 +1,9 @@
-import * as React from 'react';
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  useContext,
+  useState
+} from 'react';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
@@ -10,15 +15,21 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Logout from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import {
+  mainListItems
+  // secondaryListItems
+} from './listItems';
 import TopBar from '../topbar';
 import Sidebar from '../sidebar';
 import Footer from '../footer';
+import AuthContext from '../../context/auth';
 
-const Wrapper: React.FunctionComponent<React.PropsWithChildren> = (props) => {
+const Wrapper: FunctionComponent<PropsWithChildren> = (props) => {
+  const { logout } = useContext(AuthContext);
   const { children } = props;
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -57,6 +68,9 @@ const Wrapper: React.FunctionComponent<React.PropsWithChildren> = (props) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          <IconButton color="inherit" onClick={logout}>
+            <Logout />
+          </IconButton>
         </Toolbar>
       </TopBar>
       <Sidebar variant="permanent" open={open}>
@@ -76,7 +90,7 @@ const Wrapper: React.FunctionComponent<React.PropsWithChildren> = (props) => {
         <List component="nav">
           {mainListItems}
           <Divider sx={{ my: 1 }} />
-          {secondaryListItems}
+          {/* {secondaryListItems} */}
         </List>
       </Sidebar>
       <Box

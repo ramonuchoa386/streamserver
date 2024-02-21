@@ -1,11 +1,18 @@
-import { Wrapper } from './components';
-import { Home } from './pages';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import AppRoutes from './router';
+import { theme } from './config';
+import GlobalContext from './context';
 
 const App: React.FunctionComponent = () => {
   return (
-    <Wrapper>
-      <Home />
-    </Wrapper>
+    <>
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <GlobalContext>
+          <AppRoutes />
+        </GlobalContext>
+      </ThemeProvider>
+    </>
   );
 };
 
