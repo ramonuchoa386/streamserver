@@ -17,6 +17,10 @@ public class MoradorService {
     public List<MoradorEntity> listarTodas() {
         return moradorRepository.findAll();
     }
+
+    public List<MoradorEntity> findByApartamento(String apartamento) {
+        return moradorRepository.findByApartamento(apartamento);
+    }
     
     public MoradorEntity buscarPorId(Long id) {
         return moradorRepository.findById(id).orElse(null);

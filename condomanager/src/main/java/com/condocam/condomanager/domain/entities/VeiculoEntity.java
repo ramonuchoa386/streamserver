@@ -21,8 +21,8 @@ public class VeiculoEntity {
     private String marca;
     private String modelo;
     private String placa;
-    
+
     @ManyToOne
-    @JoinColumn(name = "proprietario_id")
+    @JoinColumn(name = "proprietario_id", nullable = false)
     private MoradorEntity proprietario;
 }
