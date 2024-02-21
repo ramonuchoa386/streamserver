@@ -1,23 +1,24 @@
 version: "3"
 
 services:
-  # snapshotserver:
-  #   build:
-  #     dockerfile: ./snapshotserver/snapshotserver.Dockerfile
-  #     args:
-  #       - INPUT_STREAM_FROM=${INPUT_STREAM}
-  #   volumes:
-  #     - snapshotlocation:/src
+  snapshotserver:
+    build:
+      context: ./snapshotserver
+      dockerfile: ./snapshotserver.Dockerfile
+      args:
+        - INPUT_STREAM_FROM=${INPUT_STREAM}
+    volumes:
+      - snapshotlocation:/src
 
-  # filesender:
-  #   build:
-  #     context: ./filesender
-  #     dockerfile: ./filesender.Dockerfile
-  #     args:
-  #       - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
-  #       - SNAPSHOT_FOLDER=${FOLDER}
-  #   volumes:
-  #     - snapshotlocation:/app/test
+  filesender:
+    build:
+      context: ./filesender
+      dockerfile: ./filesender.Dockerfile
+      args:
+        - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
+        - SNAPSHOT_FOLDER=${FOLDER}
+    volumes:
+      - snapshotlocation:/app/test
 
   mysql:
     image: mysql:latest
@@ -41,6 +42,10 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      DB_CONNECTION_STRING: $DB_CONNECTION_STRING
+      DB_USER: $DB_USER
+      DB_PASS: $DB_PASS
     build:
       context: ./condomanager
       dockerfile: ./bin/condomanager.Dockerfile
@@ -58,17 +63,17 @@ services:
       timeout: 10s
       retries: 3
 
-  # condoclient:
-  #   depends_on:
-  #     condomanager:
-  #       condition: service_healthy
-  #   build:
-  #     context: ./condoclient
-  #     dockerfile: ./bin/condoclient.Dockerfile
-  #   ports:
-  #     - "8094:80"
-  #   links:
-  #     - condomanager
+  condoclient:
+    depends_on:
+      condomanager:
+        condition: service_healthy
+    build:
+      context: ./condoclient
+      dockerfile: ./bin/condoclient.Dockerfile
+    ports:
+      - "8094:80"
+    links:
+      - condomanager
 
 volumes:
   snapshotlocation:
