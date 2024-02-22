@@ -11,12 +11,16 @@ services:
       - snapshotlocation:/src
 
   filesender:
+    depends_on:
+      condomanager:
+        condition: service_healthy
     build:
       context: ./filesender
       dockerfile: ./filesender.Dockerfile
       args:
-        - API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
-        - SNAPSHOT_FOLDER=${FOLDER}
+        - PLATE_RECOGNIZER_API_TOKEN=${PLATE_RECOGNIZER_API_TOKEN}
+        - SNAPSHOT_FOLDER=${SNAPSHOT_FOLDER}
+        - API_HOST=${API_HOST}
     volumes:
       - snapshotlocation:/app/test
 
