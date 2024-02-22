@@ -9,11 +9,10 @@ import {
 } from "./domain/plate-recognizer.interface";
 
 dotenv.config();
-console.log(process.env);
 
-const directory = process.env.SNAPSHOT_FOLDER || process.env.FOLDER;
-const token = process.env.TOKEN || process.env.PLATE_RECOGNIZER_API_TOKEN;
-const apiUrl = "https://api.platerecognizer.com/v1/plate-reader/";
+const directory = process.env.SNAPSHOT_FOLDER;
+const token = process.env.PLATE_RECOGNIZER_API_TOKEN;
+const apiHost = process.env.API_HOST;
 
 let lastFileModification: number | null = null;
 
@@ -54,7 +53,10 @@ async function sendFileToApi(directory: string, token: string) {
           body: formdata,
         };
 
-        await fetch(apiUrl, requestOptions)
+        await fetch(
+          "https://api.platerecognizer.com/v1/plate-reader/",
+          requestOptions
+        )
           .then((res) => res.json())
           .then(
             async (
@@ -89,6 +91,20 @@ async function sendFileToApi(directory: string, token: string) {
                   const { plate } = results[0];
 
                   console.log("Plate: ", plate);
+
+                  const requestOptions = {
+                    method: "GET",
+                  };
+
+                  await fetch(
+                    `http://${apiHost}:8080/api/veiculos/placa/${plate}`,
+                    requestOptions
+                  )
+                    .then((response) => response.json())
+                    .then((result) =>
+                      console.log("consulta se carro esta cadastrado: ", result)
+                    )
+                    .catch((error) => console.error(error));
                   // pegar o plate no result
                   // consultar o banco de dados
                   // // se existe

@@ -5,3 +5,4 @@ filesender.Dockerfile
 /build
 start.sh
 build.sh
+/test
