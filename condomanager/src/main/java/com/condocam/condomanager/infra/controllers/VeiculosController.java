@@ -32,6 +32,17 @@ public class VeiculosController {
         VeiculoEntity veiculo = veiculoService.buscarPorId(id);
         return ResponseEntity.ok().body(veiculo);
     }
+
+    @GetMapping("/placa/{placa}")
+    public ResponseEntity<Object> buscarVeiculoPorPlaca(@PathVariable String placa) {
+        VeiculoEntity veiculo = veiculoService.buscarPorPlaca(placa);
+
+        if(veiculo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseEntity("Veículo não cadastrado."));
+        }
+
+        return ResponseEntity.ok().body(veiculo);
+    }
     
     @PostMapping
     public ResponseEntity<Object> salvarVeiculo(@RequestBody VeiculoDTO veiculo) {

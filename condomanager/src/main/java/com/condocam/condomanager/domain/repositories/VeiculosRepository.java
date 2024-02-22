@@ -6,5 +6,5 @@ import com.condocam.condomanager.domain.entities.VeiculoEntity;
 
 @Repository
 public interface VeiculosRepository extends JpaRepository<VeiculoEntity, Long> {
-    
+    VeiculoEntity findByPlaca(String placa);
 }

@@ -20,6 +20,10 @@ public class VeiculoService {
     public VeiculoEntity buscarPorId(Long id) {
         return veiculoRepository.findById(id).orElse(null);
     }
+
+    public VeiculoEntity buscarPorPlaca(String placa) {
+        return veiculoRepository.findByPlaca(placa);
+    }
     
     public VeiculoEntity salvar(VeiculoEntity veiculo) {
         System.out.println(veiculo.getProprietario());
